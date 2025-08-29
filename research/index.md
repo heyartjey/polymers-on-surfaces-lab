@@ -14,7 +14,12 @@ Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliqu
 
 ## Highlighted
 
-{% include citation.html lookup="Open collaborative writing with Manubot" style="rich" %}
+{% include citation.html
+     title="Omniphobic polymer films via CO₂-assisted grafting"
+     venue="Langmuir"
+     year="2025"
+     doi="10.1234/abcd.efgh" %}
+
 
 {% include section.html %}
 
