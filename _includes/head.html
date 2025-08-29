@@ -1,8 +1,28 @@
-<head>
-  {% include analytics.html %}
-  {% include verification.html %}
-  {% include meta.html %}
-  {% include fonts.html %}
-  {% include styles.html %}
-  {% include scripts.html %}
-</head>
+{% comment %} Minimal, GitHub Pages–compatible head {% endcomment %}
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>
+  {%- if page.title -%}{{ page.title }} – {{ site.title }}
+  {%- else -%}{{ site.title }}{%- endif -%}
+</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{%- if site.description -%}
+<meta name="description" content="{{ site.description | strip | escape }}">
+{%- endif -%}
+<link rel="icon" href="{{ '/images/icon.png' | relative_url }}">
+<link rel="apple-touch-icon" href="{{ '/images/icon.png' | relative_url }}">
+<link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+
+{%- comment -%}
+Google Analytics (optional). Put your ID in _config.yml as google_analytics: G-XXXX.
+Do not add Liquid filters or includes to this block.
+{%- endcomment -%}
+{%- if jekyll.environment == "production" and site.google_analytics -%}
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics }}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '{{ site.google_analytics }}');
+</script>
+{%- endif -%}
