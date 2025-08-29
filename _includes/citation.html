@@ -1,109 +1,30 @@
-{% if include.lookup %}
-  {% assign citation = site.data.citations
-    | where_exp: "citation",
-      "citation.id == include.lookup or citation.title contains include.lookup"
-    | first
-  %}
-{% else %}
-  {% assign citation = include %}
-{% endif %}
+{%- comment -%}
+Usage examples:
+  {% include citation.html title="Omniphobic films" venue="Langmuir" year="2024" doi="10.1234/abcd" %}
+  {% include citation.html title="Polymer sensors" url="https://arxiv.org/abs/1234" year="2023" %}
+  {% include citation.html title="Bio paper" pmid="12345678" %}
+Notes:
+  - No commas between params
+  - Quote all string values
+{%- endcomment -%}
 
-<div class="citation-container">
-  <div class="citation">
-    {% if include.style == "rich" %}
-      <a
-        {% if citation.link %}
-          href="{{ citation.link | relative_url | uri_escape }}"
-        {% endif %}
-        class="citation-image"
-        aria-label="{{ citation.title | default: "citation link" | regex_strip }}"
-      >
-        <img
-          src="{{ citation.image | relative_url | uri_escape }}"
-          alt="{{ citation.title | default: "citation image" | regex_strip }}"
-          loading="lazy"
-          {% include fallback.html %}
-        >
-      </a>
-    {% endif %}
+{%- assign title = include.title | default: nil -%}
+{%- assign venue = include.venue | default: nil -%}
+{%- assign year  = include.year  | default: nil -%}
+{%- assign doi   = include.doi   | default: nil -%}
+{%- assign pmid  = include.pmid  | default: nil -%}
+{%- assign url   = include.url   | default: nil -%}
 
-    <div class="citation-text">
-      {% assign type = site.data.types[citation.type] %}
-      {% include icon.html icon=type.icon %}
-
-      <a
-        {% if citation.link %}
-          href="{{ citation.link | relative_url | xml_escape }}"
-        {% endif %}
-        class="citation-title"
-      >
-        {{ citation.title | default: "[no title info]" }}
-      </a>
-
-      <div
-        class="citation-authors"
-        {% if citation.authors.size > 10 %}
-          data-tooltip="{{ citation.authors | join: ", " | xml_escape }}"
-        {% endif %}
-        tabindex="0"
-      >
-        {{
-          citation.authors
-          | join: ","
-          | split: ","
-          | array_carve: 5
-          | join: ", "
-          | markdownify
-          | remove: "<p>" | remove: "</p>"
-          | default: "[no author info]"
-        }}
-      </div>
-
-      <div class="citation-details">
-        <span class="citation-publisher">
-          {{- citation.publisher | default: "[no publisher info]" -}}
-        </span>
-        &nbsp;·&nbsp;
-        <span class="citation-date">
-          {{- citation.date | default: "[no date info]" | date: "%d %b %Y" -}}
-        </span>
-        &nbsp;·&nbsp;
-        <span class="citation-id">
-          {{- citation.id | default: "[no id info]" -}}
-        </span>
-      </div>
-
-      {% if include.style == "rich" %}
-        {% if citation.description %}
-          <div class="citation-description">
-            {{
-              citation.description
-              | markdownify
-              | remove: "<p>"
-              | remove: "</p>"
-            }}
-          </div>
-        {% endif %}
-
-        {% if citation.buttons.size > 0 %}
-          <div class="citation-buttons">
-            {% for button in citation.buttons %}
-              {%
-                include button.html
-                type=button.type
-                icon=button.icon
-                text=button.text
-                link=button.link
-                style="bare"
-              %}
-            {% endfor %}
-          </div>
-        {% endif %}
-
-        {% if citation.tags.size > 0 or citation.repo %}
-          {% include tags.html tags=citation.tags repo=citation.repo %}
-        {% endif %}
-      {% endif %}
-    </div>
-  </div>
-</div>
+<li class="citation">
+  {%- if title -%}<span class="title">{{ title }}</span>{%- endif -%}
+  {%- if venue or year -%}
+    <span class="meta">{% if venue %}<em>{{ venue }}</em>{% endif %}{% if year %} ({{ year }}){% endif %}</span>
+  {%- endif -%}
+  {%- if doi -%}
+    <a href="https://doi.org/{{ doi | strip }}" target="_blank" rel="noopener">DOI</a>
+  {%- elsif pmid -%}
+    <a href="https://pubmed.ncbi.nlm.nih.gov/{{ pmid | strip }}/" target="_blank" rel="noopener">PubMed</a>
+  {%- elsif url -%}
+    <a href="{{ url | strip }}" target="_blank" rel="noopener">Link</a>
+  {%- endif -%}
+</li>
