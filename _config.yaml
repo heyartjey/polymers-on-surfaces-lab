@@ -5,6 +5,9 @@ description: An easy-to-use, flexible website template for labs, with automatic 
 header: images/background.jpg
 footer: images/background.jpg
 proofer: false
+url: "https://heyartjey.github.io"          # your user/org pages root
+baseurl: "/polymers-on-surfaces-lab"        # your repo name, with leading slash
+
 
 # site social media and other links
 links:
